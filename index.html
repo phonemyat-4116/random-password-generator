@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Password Generator</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #1679AB;
+        font-family: sans-serif;
+        color: #fff;
+    }
+
+    .container {
+        margin: 15%;
+    }
+
+    .action-container {
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+        width: 40%;
+    }
+
+    h1 span {
+        color: #C5FF95;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 10px;
+    }
+
+    .display {
+        width: 300px;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .display input {
+        width: 300px;
+        height: 40px;
+        border-radius: 3px;
+        background: #fff;
+        border: 0;
+        padding-left: 10px;
+    }
+
+    .display img {
+        width: 15px;
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .copy-info {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 30px;
+        background: #37cc48;
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin-left: 20px;
+    }
+
+    .copy-info img {
+        width: 20px;
+        margin-right: 5px;
+    }
+
+    button {
+        display: block;
+        padding: 10px 0;
+        width: 150px;
+        border-radius: 5px;
+        border: none;
+        background: #5DEBD7;
+        color: #074173;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    button:hover {
+        background: #84ebd3;
+    }
+
+    label {
+        margin-right: 10px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Random <span>Password Generator</span></h1>
+        <div class="action-container">
+            <div class="display">
+                <input type="text" class="passwordBox" id="password" disabled>
+                <img src="./copy.png" alt="copy" onclick="copyToClipboard()" />
+            </div>
+            <div class="copy-info">
+                <img src="./tick.png" alt="tick">
+                <p>Copied</p>
+            </div>
+        </div>
+        <input type="checkbox" id="uppercase" class="checkbox" value="uppercase"><label for="uppercase">
+            Uppercase</label>
+        <input type="checkbox" id="lowercase" class="checkbox" value="lowercase"><label for="lowercase">
+            Lowercase</label>
+        <input type="checkbox" id="symbols" class="checkbox" value="symbols"><label for="symbols"> Symbols</label>
+        <input type="checkbox" id="numbers" class="checkbox" value="numbers"><label for="numbers"> Numbers</label>
+        <button onclick="generatePassword()">Generate</button>
+
+    </div>
+</body>
+<script>
+    const passwordBox = document.getElementById("password");
+    const copyInfo = document.querySelector(".copy-info");
+    const checkboxes = document.querySelectorAll(".checkbox");
+    const default_length = 12;
+
+    const charSets = {
+        "uppercase": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "lowercase": "abcdefghijklmnopqrstuvwxyz",
+        "symbols": "!@#$%^&*()_+[]{}|;:,.<>?",
+        "numbers": "0123456789"
+    }
+    // const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    // const lowercase = uppercase.toLowerCase();
+    // const symbols = "!@#$%^&*()_+[]{}|;:,.<>?"
+    // const numbers = "0123456789";
+
+    // * Password generating function
+    function generatePassword() {
+        let password = "";
+        let allCharSets = "";
+        checkValues = []; // the checked value from checkbox
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                checkValues.push(checkboxes[i].value);
+            }
+        }
+        if (checkValues.length > 0) {
+            checkValues.forEach(value => {
+                allCharSets += charSets[value];
+            });
+
+            for (let i = 0; i < default_length; i++) {
+                password += allCharSets[Math.floor(Math.random() * allCharSets.length)];
+            }
+            passwordBox.value = password;   
+        }else{
+            window.alert('No attribute selected!');
+        }
+
+    }
+
+    function copyToClipboard() {
+        if (passwordBox.value.trim() !== "") {
+            navigator.clipboard.writeText(passwordBox.value)
+                .then(() => {
+                    copyInfo.style.display = "flex";
+
+                    setTimeout(() => {
+                        copyInfo.style.display = "none";
+                    }, 4000);
+                })
+        }
+
+    }
+
+</script>
+
+</html>
